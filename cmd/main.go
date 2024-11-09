@@ -17,14 +17,17 @@ var (
 func main() {
 	defer config.CloseDatabaseConnection(db)
 	
-	server := gin.Default()
+	router := gin.Default()
 
 	productRepo := repository.NewProductRepository(db)
 	ProductUseCase := usecases.NewProductUseCase(productRepo)
 	ProductController := controller.NewProductController(ProductUseCase)
 
-	server.GET("/product", ProductController.GetProducts)
-	server.POST("/product", ProductController.CreateProducts)
+	prod := router.Group("/product")
+	{
+		prod.GET("/", ProductController.GetProducts)
+		prod.POST("/", ProductController.CreateProducts)
+	}
 
-	server.Run(":5000")
+	router.Run(":5000")
 }

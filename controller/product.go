@@ -1,12 +1,16 @@
 package controller
 
 import (
+	"go-api/dto"
 	"go-api/entities"
 	"go-api/usecases"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/go-playground/validator/v10"
 )
+
+var validate = validator.New()
 
 type ProductController interface {
 	GetProducts(ctx *gin.Context)
@@ -33,14 +37,25 @@ func (p *productController) GetProducts(ctx *gin.Context) {
 }
 
 func (p *productController) CreateProducts(ctx *gin.Context) {
-	var product entities.Product
-	if err := ctx.ShouldBindJSON(&product); err != nil {
+	var input dto.ProductCreateDTO
+
+	if err := ctx.ShouldBindJSON(&input); err != nil {
         ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
         return
     }
 
-	if err := product.Validate(); err != nil {
-        ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	product := entities.Product{
+		Name: input.Name,
+		Price: input.Price,
+	}
+
+	if err := validate.Struct(&product); err != nil {
+        validationErrors := err.(validator.ValidationErrors)
+        errors := make(map[string]string)
+        for _, validationErr := range validationErrors {
+            errors[validationErr.Field()] = validationErr.ActualTag()
+        }
+        ctx.JSON(http.StatusBadRequest, gin.H{"errors": errors})
         return
     }
 
