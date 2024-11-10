@@ -19,14 +19,14 @@ func main() {
 	
 	router := gin.Default()
 
-	productRepo := repository.NewProductRepository(db)
-	ProductUseCase := usecases.NewProductUseCase(productRepo)
-	ProductController := controller.NewProductController(ProductUseCase)
+	documentRepo := repository.NewDocumentRepository(db)
+	documentUseCase := usecases.NewDocumentUseCase(documentRepo)
+	documentController := controller.NewDocumentController(documentUseCase)
 
-	prod := router.Group("/product")
+	prod := router.Group("/document")
 	{
-		prod.GET("/", ProductController.GetProducts)
-		prod.POST("/", ProductController.CreateProducts)
+		prod.GET("/", documentController.GetDocuments)
+		prod.POST("/", documentController.CreateDocuments)
 	}
 
 	router.Run(":5000")
