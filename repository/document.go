@@ -1,7 +1,7 @@
 package repository
 
 import (
-	"go-api/entities"
+	"github.com/DamiaoCanndido/document-api/entities"
 
 	"gorm.io/gorm"
 )
@@ -16,9 +16,9 @@ func NewDocumentRepository(connection *gorm.DB) DocumentRepository {
 	}
 }
 
-func (doc *DocumentRepository) GetDocuments() ([]entities.Document, error){
+func (doc *DocumentRepository) GetDocuments(docType string) ([]entities.Document, error){
 	var document []entities.Document
-	doc.connection.Find(&document)
+	doc.connection.Where("type = ?", docType).Find(&document)
 	return document, nil
 }
 

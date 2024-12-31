@@ -10,18 +10,18 @@ import (
 type DocumentType string
 
 const (
-    Decree       	DocumentType = "Decree"
-    Law          	DocumentType = "Law"
-    Notice 			DocumentType = "Notice"
-    Ordinance    	DocumentType = "Ordinance"
+    Decree       	DocumentType = "decree"
+    Law          	DocumentType = "law"
+    Notice 			DocumentType = "notice"
+    Ordinance    	DocumentType = "ordinance"
 )
 
 type Document struct {
-    ID          uuid.UUID 		`gorm:"type:uuid;primaryKey;"`
-    Type        DocumentType   	`gorm:"type:varchar(20);not null"`
-    Order       int            	`gorm:"not null"`
-    Description string         	`gorm:"not null"`
-    CreatedAt   time.Time      	`gorm:"not null autoCreateTime"`
+    ID          uuid.UUID 		`gorm:"type:uuid;primaryKey;" json:"id"`
+    Type        DocumentType   	`gorm:"type:varchar(20);not null" json:"type"`
+    Order       int            	`gorm:"not null" json:"order"`
+    Description string         	`gorm:"not null" json:"description"`
+    CreatedAt   time.Time      	`gorm:"not null autoCreateTime" json:"createdAt"`
 }
 
 func (d *Document) BeforeCreate(db *gorm.DB) (err error) {

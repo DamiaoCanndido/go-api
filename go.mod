@@ -1,4 +1,4 @@
-module go-api
+module github.com/DamiaoCanndido/document-api
 
 go 1.23.0
 

@@ -1,33 +1,36 @@
 package controller
 
 import (
-	"go-api/dto"
-	"go-api/entities"
-	"go-api/usecases"
 	"net/http"
+
+	"github.com/DamiaoCanndido/document-api/dto"
+	"github.com/DamiaoCanndido/document-api/entities"
+	"github.com/DamiaoCanndido/document-api/usecases"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 )
 
-var validate = validator.New()
+var validate = validator.New(validator.WithRequiredStructEnabled())
 
 type DocumentController interface {
 	GetDocuments(ctx *gin.Context)
+	CreateDocuments(ctx *gin.Context)
 }
 
 type documentController struct {
 	documentUseCase usecases.DocumentUseCase
 }
 
-func NewDocumentController(usecase usecases.DocumentUseCase) documentController {
-	return documentController{
+func NewDocumentController(usecase usecases.DocumentUseCase) DocumentController {
+	return &documentController{
 		documentUseCase: usecase,
 	}
 }
 
 func (d *documentController) GetDocuments(ctx *gin.Context) {
-	documents, err := d.documentUseCase.GetDocuments()
+	docType := ctx.Param("doc")
+	documents, err := d.documentUseCase.GetDocuments(docType)
 
 	if (err != nil) {
 		ctx.JSON(http.StatusNotFound, err)
@@ -61,7 +64,11 @@ func (d *documentController) CreateDocuments(ctx *gin.Context) {
         return
     }
 
-	documents, _ := d.documentUseCase.CreateDocuments(document)
+	documents, err := d.documentUseCase.CreateDocuments(document)
+
+	if (err != nil) {
+		ctx.JSON(http.StatusBadRequest, err)
+	}
 
 	ctx.JSON(http.StatusCreated, documents)
 }

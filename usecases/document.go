@@ -1,8 +1,8 @@
 package usecases
 
 import (
-	"go-api/entities"
-	"go-api/repository"
+	"github.com/DamiaoCanndido/document-api/entities"
+	"github.com/DamiaoCanndido/document-api/repository"
 )
 
 type DocumentUseCase struct {
@@ -15,8 +15,8 @@ func NewDocumentUseCase(repo repository.DocumentRepository) DocumentUseCase {
 	}
 }
 
-func (doc *DocumentUseCase) GetDocuments() ([]entities.Document, error) {
-	return doc.repository.GetDocuments()
+func (doc *DocumentUseCase) GetDocuments(docType string) ([]entities.Document, error) {
+	return doc.repository.GetDocuments(docType)
 }
 
 func (doc *DocumentUseCase) CreateDocuments(document entities.Document) (entities.Document, error) {

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"go-api/entities"
+	"github.com/DamiaoCanndido/document-api/entities"
 
 	"github.com/joho/godotenv"
 	"gorm.io/driver/postgres"
